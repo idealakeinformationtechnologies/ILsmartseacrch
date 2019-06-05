@@ -1,0 +1,5 @@
+{
+  "name": "cardsrule",
+  "format" : "solr",
+  "synonyms" :  "No, Account Number, Card Number \n a/c ,Account,Account Number"
+}

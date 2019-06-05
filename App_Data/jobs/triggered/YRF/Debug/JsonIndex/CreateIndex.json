@@ -1,0 +1,168 @@
+{
+  "name": "crawlersearch",
+  "fields": [
+    {
+      "name": "Id",
+      "type": "Edm.String",
+      "searchable": false,
+      "filterable": false,
+      "sortable": false,
+      "facetable": false,
+      "key": true,
+      "retrievable": true,
+      "synonymMaps": [ ]
+    },
+    {
+      "name": "title",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": true,
+      "sortable": true,
+      "facetable": false,
+      "key": false,
+      "retrievable": true,
+      "analyzer": "en.lucene",
+      "synonymMaps": [ "cardsrule" ]
+    },
+    {
+      "name": "keywords",
+      "type": "Collection(Edm.String)",
+      "searchable": true,
+      "filterable": true,
+      "sortable": false,
+      "facetable": false,
+      "key": false,
+      "retrievable": false,
+      "analyzer": "en.lucene",
+      "synonymMaps": [  ]
+    },
+    {
+      "name": "content",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": true,
+      "sortable": false,
+      "facetable": false,
+      "key": false,
+      "retrievable": false,
+      "analyzer": "en.lucene",
+      "synonymMaps": [  ]
+    },
+    {
+      "name": "description",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": true,
+      "sortable": false,
+      "facetable": false,
+      "key": false,
+      "retrievable": true,
+      "analyzer": "phonetic_area_analyzer",
+      "synonymMaps": [ "cardsrule" ]
+    },
+    {
+      "name": "url",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": false,
+      "sortable": false,
+      "facetable": false,
+      "key": false,
+      "retrievable": true,
+      "analyzer": "en.lucene",
+      "synonymMaps": [ ]
+    },
+     {
+      "name": "priority",
+      "type": "Edm.Int32",
+      "searchable": false,
+      "filterable": true,
+      "sortable": true,
+      "facetable": false,
+      "key": false,
+      "retrievable": true,
+      "synonymMaps": []
+    }
+  ],
+
+  "corsOptions": {
+    "allowedOrigins": [ "*" ],
+    "maxAgeInSeconds": 3000
+  },
+  "scoringProfiles": [
+    {
+      "name": "Weightage",
+      "text": {
+        "weights": {
+          "title": 100,
+          "description": 50,
+          "keywords": 10
+
+        }
+      }
+    },
+     {
+      "name": "Magnitude",
+      "functions": [
+        {
+          "type": "magnitude",
+          "fieldName": "priority",
+          "boost": 10,
+          "interpolation": "linear",
+          "magnitude": {
+            "boostingRangeStart": 1000,
+            "boostingRangeEnd": 1,
+            "constantBoostBeyondRange": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "WeightageAndMagnitude",
+      "text": {
+        "weights": {
+          "title": 1,
+          "description": 50,
+          "keywords": 300
+
+        }
+      },
+      "functions": [
+        {
+          "type": "magnitude",
+          "fieldName": "priority",
+          "boost": 10,
+          "interpolation": "linear",
+          "magnitude": {
+            "boostingRangeStart": 1,
+            "boostingRangeEnd": 10000,
+            "constantBoostBeyondRange": true
+          }
+        }
+      ]
+    }
+  ],
+  "suggesters": [ ],
+  "analyzers": [
+    {
+      "name": "phonetic_area_analyzer",
+      "@odata.type": "#Microsoft.Azure.Search.CustomAnalyzer",
+      "tokenizer": "area_standard",
+      "tokenFilters": [ "lowercase", "asciifolding", "areas_phonetc" ]
+    }
+  ],
+  "tokenizers": [
+    {
+      "name": "area_standard",
+      "@odata.type": "#Microsoft.Azure.Search.StandardTokenizerV2"
+    }
+  ],
+  "tokenFilters": [
+    {
+      "name": "areas_phonetc",
+      "@odata.type": "#Microsoft.Azure.Search.PhoneticTokenFilter",
+      "encoder": "doubleMetaphone"
+    }
+  ],
+  "charFilters": []
+}
